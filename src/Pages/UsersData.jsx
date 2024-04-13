@@ -89,7 +89,6 @@ function UsersData() {
                                     <i class="fas fa-table me-1"></i>
                                     Users Data                            </div>
                                 <div className='container mt-5 text-center d-flex justify-content-center'>
-                                    <button className='btn btn-success'>Add New <i className='fas fa-plus'></i></button>
                                     <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
                                         <div class="input-group">
                                             <input class="form-control" type="text" placeholder="Search for..." aria-label="Search for..." aria-describedby="btnNavbarSearch" />

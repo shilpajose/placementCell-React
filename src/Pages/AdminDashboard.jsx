@@ -127,7 +127,9 @@ function AdminDashboard() {
                                             <i class="fas fa-chart-area me-1"></i>
                                             Area Chart Example
                                         </div>
-                                        <div class="card-body"><canvas id="myAreaChart" width="100%" height="40"></canvas></div>
+                                        <div class="card-body"><canvas id="myAreaChart" width="100%" height="40"></canvas>
+                                            <img src="https://www.datapine.com/blog/wp-content/uploads/2023/04/area-chart-cash-burn-rate.png" alt="" style={{ height: '250px' }} />
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="col-xl-6">
@@ -136,7 +138,8 @@ function AdminDashboard() {
                                             <i class="fas fa-chart-bar me-1"></i>
                                             Bar Chart Example
                                         </div>
-                                        <div class="card-body"><canvas id="myBarChart" width="100%" height="40"></canvas></div>
+                                        <div class="card-body"><canvas id="myBarChart" width="100%" height="40"></canvas>
+                                            <img src="https://cdn.sanity.io/images/599r6htc/localized/5ad851c14fe712b1789e645bf5f187c1ea9679f2-1108x1108.png?w=1200&q=70&fit=max&auto=format" alt="" style={{ height: '250px' }} /></div>
                                     </div>
                                 </div>
                             </div>

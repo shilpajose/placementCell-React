@@ -3,8 +3,15 @@ import './admindashboardscripts.js'
 import './admindashboardstyles.css'
 import './admindatatable.js'
 import { Link } from 'react-router-dom'
+import { useState } from 'react';
+import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
 
 function UsersData() {
+    const [show, setShow] = useState(false);
+
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
     return (
         <>
             <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
@@ -90,14 +97,34 @@ function UsersData() {
                                     Placements Data                            </div>
                                 10 entries
                                 <div className='container mt-5 text-center d-flex justify-content-center'>
-                                    <button className='btn btn-success'>Add New <i className='fas fa-plus'></i></button>
+                                    <button onClick={handleShow} className='btn btn-success'>Add New <i className='fas fa-plus'></i></button>
                                     <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
                                         <div class="input-group">
                                             <input class="form-control" type="text" placeholder="Search for..." aria-label="Search for..." aria-describedby="btnNavbarSearch" />
                                             <button class="btn btn-primary" id="btnNavbarSearch" type="button"><i class="fas fa-search"></i></button>
                                         </div>
                                     </form>
-                                </div> 
+                                </div>
+                                <Modal show={show} onHide={handleClose}>
+                                    <Modal.Header closeButton>
+                                        <Modal.Title>Add Placement data</Modal.Title>
+                                    </Modal.Header>
+                                    <Modal.Body>
+                                        <input type="text" placeholder='Company Name' className='form-control mb-2'/>
+                                        <input type="text" placeholder='Company address' className='form-control  mb-2'/>
+                                        <input type="text" placeholder='Job position' className='form-control  mb-2'/>
+                                        <input type="text" placeholder='Interview Date' className='form-control  mb-2'/>
+                                        <input type="text" placeholder='Venue' className='form-control  mb-2'/>
+                                    </Modal.Body>
+                                    <Modal.Footer>
+                                        <Button variant="secondary" onClick={handleClose}>
+                                            Close
+                                        </Button>
+                                        <Button variant="primary" onClick={handleClose}>
+                                            Save Changes
+                                        </Button>
+                                    </Modal.Footer>
+                                </Modal>
                                 <div class="card-body">
                                     <table className='table table-striped'>
                                         <thead>
