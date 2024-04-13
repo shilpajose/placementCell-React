@@ -71,7 +71,7 @@ function AdminDashboard() {
                         </div>
                         <div class="sb-sidenav-footer">
                             <div class="small">Logged in as:</div>
-                            Start Bootstrap
+                            Placement Cell
                         </div>
                     </nav>
                 </div>
