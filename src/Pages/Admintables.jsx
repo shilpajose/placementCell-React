@@ -7,7 +7,7 @@ import { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 
-function UsersData() {
+function Admintables() {
     const [show, setShow] = useState(false);
 
     const handleClose = () => setShow(false);
@@ -16,8 +16,10 @@ function UsersData() {
         <>
             <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
                 {/* <!-- Navbar Brand--> */}
-                <a class="navbar-brand ps-3" href="index.html">Placement Cell</a>
-                {/* <!-- Sidebar Toggle--> */}
+                <Link to={'/admindashboard'} style={{ textDecoration: 'none' }}>
+                    <a class="navbar-brand ps-3">Placement Cell</a>
+                </Link>  
+                 {/* <!-- Sidebar Toggle--> */}
                 <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
                 {/* <!-- Navbar Search--> */}
                 <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
@@ -84,7 +86,7 @@ function UsersData() {
                                 <Link to={'/admindashboard'} style={{ textDecoration: 'none' }}>
                                     <li class="breadcrumb-item"><a >Dashboard /</a></li>
                                 </Link>
-                                <li class="breadcrumb-item active">User Management</li>
+                                <li class="breadcrumb-item active">Placement Management</li>
                             </ol>
                             <div class="card mb-4">
                                 <div class="card-body">
@@ -110,11 +112,11 @@ function UsersData() {
                                         <Modal.Title>Add Placement data</Modal.Title>
                                     </Modal.Header>
                                     <Modal.Body>
-                                        <input type="text" placeholder='Company Name' className='form-control mb-2'/>
-                                        <input type="text" placeholder='Company address' className='form-control  mb-2'/>
-                                        <input type="text" placeholder='Job position' className='form-control  mb-2'/>
-                                        <input type="text" placeholder='Interview Date' className='form-control  mb-2'/>
-                                        <input type="text" placeholder='Venue' className='form-control  mb-2'/>
+                                        <input type="text" placeholder='Company Name' className='form-control mb-2' />
+                                        <input type="text" placeholder='Company address' className='form-control  mb-2' />
+                                        <input type="text" placeholder='Job position' className='form-control  mb-2' />
+                                        <input type="text" placeholder='Interview Date' className='form-control  mb-2' />
+                                        <input type="text" placeholder='Venue' className='form-control  mb-2' />
                                     </Modal.Body>
                                     <Modal.Footer>
                                         <Button variant="secondary" onClick={handleClose}>
@@ -286,4 +288,4 @@ function UsersData() {
     )
 }
 
-export default UsersData
+export default Admintables

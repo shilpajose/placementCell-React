@@ -9,7 +9,9 @@ function UsersData() {
         <>
             <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
                 {/* <!-- Navbar Brand--> */}
-                <a class="navbar-brand ps-3" href="index.html">Placement Cell</a>
+                <Link to={'/admindashboard'} style={{ textDecoration: 'none' }}>
+                    <a class="navbar-brand ps-3">Placement Cell</a>
+                </Link>
                 {/* <!-- Sidebar Toggle--> */}
                 <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
                 {/* <!-- Navbar Search--> */}
@@ -95,9 +97,9 @@ function UsersData() {
                                             <button class="btn btn-primary" id="btnNavbarSearch" type="button"><i class="fas fa-search"></i></button>
                                         </div>
                                     </form>
-                                </div> 
-                                    <div class="card-body">
-                                   
+                                </div>
+                                <div class="card-body">
+
                                     <table className='table table-striped'>
                                         <thead>
                                             <tr>
