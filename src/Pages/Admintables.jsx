@@ -66,6 +66,7 @@ function Admintables() {
                     toast.success('Placement for this company has been added')
                     setInputs({ company_name: "", company_address: "", job_position: "", date: "", venue: "" })
                     handleClose()
+                    getAllPlacements()
                 } else {
                     toast.error(result.response.data)
                 }
@@ -94,7 +95,6 @@ function Admintables() {
     }
 
     useEffect(() => {
-        AddPlacements()
         getAllPlacements()
     }, [])
     return (
