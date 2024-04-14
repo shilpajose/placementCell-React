@@ -18,6 +18,7 @@ function Auth({ insideRegister }) {
     username: "", email: "", password: "", photo: ''
   })
   // console.log(userInputs);
+
   // /validation logic
   const validateEmail = (email) => {
     // Basic email validation
@@ -160,6 +161,8 @@ function Auth({ insideRegister }) {
                           placeholder="Photo"
                           isInvalid={!validatePhoto(userInputs.photo)}
                         />
+                        <Form.Control.Feedback type="invalid">Please add photos.</Form.Control.Feedback>
+
                       </FloatingLabel>
                     </>
 

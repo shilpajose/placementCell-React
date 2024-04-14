@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import './admindashboardscripts.js'
 import './admindashboardstyles.css'
 import './admindatatable.js'
@@ -6,25 +6,103 @@ import { Link } from 'react-router-dom'
 import { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
+import { addPlacementsAPI, getAllPlacementsAPI } from '../Services/AllApi.js';
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, toast } from 'react-toastify';
+import { FloatingLabel, Form } from 'react-bootstrap'
 
 function Admintables() {
-    const [show, setShow] = useState(false);
 
-    const handleClose = () => setShow(false);
+    // add placement data
+    const [inputs, setInputs] = useState({
+        company_name: "", company_address: "", job_position: "", date: "", venue: ""
+    })
+    // console.log(inputs);
+
+    // state for getting all placements
+    const [allPlacementData, setAllPlacementData] = useState([])
+
+    // modal form
+    const [show, setShow] = useState(false);
+    const handleClose = () => {
+        setShow(false);
+        setInputs({ company_name: "", company_address: "", job_position: "", date: "", venue: "" })
+    }
     const handleShow = () => setShow(true);
 
+    // logout
     const logout = () => {
         sessionStorage.removeItem('existingUser')
         navigate('/')
     }
+
+    // validation fields logic
+    const validateCompanyName = (company_name) => {
+        return company_name.trim() !== ''
+    }
+    const validateCompanyAddress = (company_address) => {
+        return company_address.trim() !== ''
+    }
+    const validateJobPosition = (job_position) => {
+        return job_position.trim() !== ''
+    }
+    const validateDate = (date) => {
+        return date.trim() !== ''
+    }
+    const validateVenue = (venue) => {
+        return venue.trim() !== ''
+    }
+
+    // add placements
+    const AddPlacements = async (e) => {
+        e.preventDefault()
+        const { company_name, company_address, job_position, date, venue } = inputs
+        if (validateCompanyName(company_name) && validateCompanyAddress(company_address) && validateJobPosition(job_position) && validateDate(date) && validateVenue(venue)) {
+            try {
+                // api call
+                const result = await addPlacementsAPI(inputs)
+                console.log(result);
+                if (result.status == 200) {
+                    toast.success('Placement for this company has been added')
+                    setInputs({ company_name: "", company_address: "", job_position: "", date: "", venue: "" })
+                } else {
+                    toast.error(result.response.data)
+                }
+            }
+            catch (err) {
+                console.log(err);
+            }
+        }
+        else {
+            toast.warning('Fill the form')
+        }
+    }
+
+    // get all placements
+    const getAllPlacements = async () => {
+        try {
+            const result = await getAllPlacementsAPI()
+            console.log(result);
+            if (result.status == 200) {
+                setAllPlacementData(result.data)
+            }
+        }
+        catch (err) {
+            console.log(err);
+        }
+    }
+
+    useEffect(() => {
+        getAllPlacements()
+    }, [])
     return (
         <>
             <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
                 {/* <!-- Navbar Brand--> */}
                 <Link to={'/admindashboard'} style={{ textDecoration: 'none' }}>
                     <a class="navbar-brand ps-3">Placement Cell</a>
-                </Link>  
-                 {/* <!-- Sidebar Toggle--> */}
+                </Link>
+                {/* <!-- Sidebar Toggle--> */}
                 <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
                 {/* <!-- Navbar Search--> */}
                 <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
@@ -119,17 +197,78 @@ function Admintables() {
                                         <Modal.Title>Add Placement data</Modal.Title>
                                     </Modal.Header>
                                     <Modal.Body>
-                                        <input type="text" placeholder='Company Name' className='form-control mb-2' />
-                                        <input type="text" placeholder='Company address' className='form-control  mb-2' />
-                                        <input type="text" placeholder='Job position' className='form-control  mb-2' />
-                                        <input type="text" placeholder='Interview Date' className='form-control  mb-2' />
-                                        <input type="text" placeholder='Venue' className='form-control  mb-2' />
+
+                                        <Form>
+                                            <FloatingLabel
+                                                controlId="floatingInputName"
+                                                label="Company_name"
+                                                className="mb-3"
+                                            >
+                                                <Form.Control value={inputs.company_name}
+                                                    onChange={e => setInputs({ ...inputs, company_name: e.target.value })}
+                                                    type="text"
+                                                    placeholder="Company_name"
+                                                    isInvalid={!validateCompanyName(inputs.company_name)}
+                                                />
+                                            </FloatingLabel>
+                                            <FloatingLabel
+                                                controlId="floatingInputName"
+                                                label="Company_Address"
+                                                className="mb-3"
+                                            >
+                                                <Form.Control value={inputs.company_address}
+                                                    onChange={e => setInputs({ ...inputs, company_address: e.target.value })}
+                                                    type="text"
+                                                    placeholder="Company_Address"
+                                                    isInvalid={!validateCompanyAddress(inputs.company_address)}
+                                                />
+                                            </FloatingLabel>
+                                            <FloatingLabel
+                                                controlId="floatingInputName"
+                                                label="Job Position"
+                                                className="mb-3"
+                                            >
+                                                <Form.Control value={inputs.job_position}
+                                                    onChange={e => setInputs({ ...inputs, job_position: e.target.value })}
+                                                    type="text"
+                                                    placeholder="Job Position"
+                                                    isInvalid={!validateJobPosition(inputs.job_position)}
+                                                />
+                                            </FloatingLabel>
+                                            <FloatingLabel
+                                                controlId="floatingInputName"
+                                                label="Date"
+                                                className="mb-3"
+                                            >
+                                                <Form.Control value={inputs.date}
+                                                    onChange={e => setInputs({ ...inputs, date: e.target.value })}
+                                                    type="date"
+                                                    placeholder="Date"
+                                                    isInvalid={!validateDate(inputs.date)}
+                                                />
+                                            </FloatingLabel>
+                                            <FloatingLabel
+                                                controlId="floatingInputName"
+                                                label="Venue"
+                                                className="mb-3"
+                                            >
+                                                <Form.Control value={inputs.venue}
+                                                    onChange={e => setInputs({ ...inputs, venue: e.target.value })}
+                                                    type="Venue"
+                                                    placeholder="Date"
+                                                    isInvalid={!validateVenue(inputs.venue)}
+                                                />
+                                            </FloatingLabel>
+                                        </Form>
+
+
+
                                     </Modal.Body>
                                     <Modal.Footer>
                                         <Button variant="secondary" onClick={handleClose}>
                                             Close
                                         </Button>
-                                        <Button variant="primary" onClick={handleClose}>
+                                        <Button variant="primary" onClick={AddPlacements}>
                                             Save
                                         </Button>
                                     </Modal.Footer>
@@ -138,138 +277,29 @@ function Admintables() {
                                     <table className='table table-striped'>
                                         <thead>
                                             <tr>
-                                                <th>Name</th>
-                                                <th>Position</th>
-                                                <th>Office</th>
-                                                <th>Age</th>
-                                                <th>Start date</th>
-                                                <th>Salary</th>
+                                                <th>Company Name</th>
+                                                <th>Company Address</th>
+                                                <th>Job Position</th>
+                                                <th>Date</th>
+                                                <th>Venue</th>
                                                 <th>Actions</th>
                                                 <th>Actions</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr>
-                                                <td>Tiger Nixon</td>
-                                                <td>System Architect</td>
-                                                <td>Edinburgh</td>
-                                                <td>61</td>
-                                                <td>2011/04/25</td>
-                                                <td>$320,800</td>
-                                                <td><i className='fa-solid fa-pen text-warning'></i></td>
-                                                <td><i className='fa-solid fa-trash text-danger'></i></td>
-                                            </tr>
-                                            <tr>
-                                                <td>Garrett Winters</td>
-                                                <td>Accountant</td>
-                                                <td>Tokyo</td>
-                                                <td>63</td>
-                                                <td>2011/07/25</td>
-                                                <td>$170,750</td>
-                                                <td><i className='fa-solid fa-pen text-warning'></i></td>
-                                                <td><i className='fa-solid fa-trash text-danger'></i></td>
-                                            </tr>
-                                            <tr>
-                                                <td>Ashton Cox</td>
-                                                <td>Junior Technical Author</td>
-                                                <td>San Francisco</td>
-                                                <td>66</td>
-                                                <td>2009/01/12</td>
-                                                <td>$86,000</td>
-                                                <td><i className='fa-solid fa-pen text-warning'></i></td>
-                                                <td><i className='fa-solid fa-trash text-danger'></i></td>
-                                            </tr>
-                                            <tr>
-                                                <td>Cedric Kelly</td>
-                                                <td>Senior Javascript Developer</td>
-                                                <td>Edinburgh</td>
-                                                <td>22</td>
-                                                <td>2012/03/29</td>
-                                                <td>$433,060</td>
-                                                <td><i className='fa-solid fa-pen text-warning'></i></td>
-                                                <td><i className='fa-solid fa-trash text-danger'></i></td>
-                                            </tr>
-                                            <tr>
-                                                <td>Airi Satou</td>
-                                                <td>Accountant</td>
-                                                <td>Tokyo</td>
-                                                <td>33</td>
-                                                <td>2008/11/28</td>
-                                                <td>$162,700</td>
-                                                <td><i className='fa-solid fa-pen text-warning'></i></td>
-                                                <td><i className='fa-solid fa-trash text-danger'></i></td>
-                                            </tr>
-                                            <tr>
-                                                <td>Brielle Williamson</td>
-                                                <td>Integration Specialist</td>
-                                                <td>New York</td>
-                                                <td>61</td>
-                                                <td>2012/12/02</td>
-                                                <td>$372,000</td>
-                                                <td><i className='fa-solid fa-pen text-warning'></i></td>
-                                                <td><i className='fa-solid fa-trash text-danger'></i></td>
-                                            </tr>
-                                            <tr>
-                                                <td>Herrod Chandler</td>
-                                                <td>Sales Assistant</td>
-                                                <td>San Francisco</td>
-                                                <td>59</td>
-                                                <td>2012/08/06</td>
-                                                <td>$137,500</td>
-                                                <td><i className='fa-solid fa-pen text-warning'></i></td>
-                                                <td><i className='fa-solid fa-trash text-danger'></i></td>
-                                            </tr>
-                                            <tr>
-                                                <td>Rhona Davidson</td>
-                                                <td>Integration Specialist</td>
-                                                <td>Tokyo</td>
-                                                <td>55</td>
-                                                <td>2010/10/14</td>
-                                                <td>$327,900</td>
-                                                <td><i className='fa-solid fa-pen text-warning'></i></td>
-                                                <td><i className='fa-solid fa-trash text-danger'></i></td>
-                                            </tr>
-                                            <tr>
-                                                <td>Colleen Hurst</td>
-                                                <td>Javascript Developer</td>
-                                                <td>San Francisco</td>
-                                                <td>39</td>
-                                                <td>2009/09/15</td>
-                                                <td>$205,500</td>
-                                                <td><i className='fa-solid fa-pen text-warning'></i></td>
-                                                <td><i className='fa-solid fa-trash text-danger'></i></td>
-                                            </tr>
-                                            <tr>
-                                                <td>Sonya Frost</td>
-                                                <td>Software Engineer</td>
-                                                <td>Edinburgh</td>
-                                                <td>23</td>
-                                                <td>2008/12/13</td>
-                                                <td>$103,600</td>
-                                                <td><i className='fa-solid fa-pen text-warning'></i></td>
-                                                <td><i className='fa-solid fa-trash text-danger'></i></td>
-                                            </tr>
-                                            <tr>
-                                                <td>Jena Gaines</td>
-                                                <td>Office Manager</td>
-                                                <td>London</td>
-                                                <td>30</td>
-                                                <td>2008/12/19</td>
-                                                <td>$90,560</td>
-                                                <td><i className='fa-solid fa-pen text-warning'></i></td>
-                                                <td><i className='fa-solid fa-trash text-danger'></i></td>
-                                            </tr>
-                                            <tr>
-                                                <td>Quinn Flynn</td>
-                                                <td>Support Lead</td>
-                                                <td>Edinburgh</td>
-                                                <td>22</td>
-                                                <td>2013/03/03</td>
-                                                <td>$342,000</td>
-                                                <td><i className='fa-solid fa-pen text-warning'></i></td>
-                                                <td><i className='fa-solid fa-trash text-danger'></i></td>
-                                            </tr>
-
+                                            {
+                                                allPlacementData?.length>0 && allPlacementData?.map(placements=>(
+                                                    <tr key={placements}>
+                                                    <td>{placements.company_name}</td>
+                                                    <td>{placements.company_address}</td>
+                                                    <td>{placements.job_position}</td>
+                                                    <td>{placements.date}</td>
+                                                    <td>{placements.venue}</td>
+                                                    <td><i className='fa-solid fa-pen text-warning'></i></td>
+                                                    <td><i className='fa-solid fa-trash text-danger'></i></td>
+                                                </tr>
+                                                ))
+                                            }
                                         </tbody>
                                         <h5 className='text-center'>Pagination 1 2 3 4 5 6 </h5>
                                     </table>
@@ -290,6 +320,7 @@ function Admintables() {
                         </div>
                     </footer>
                 </div>
+                <ToastContainer position='top-center' theme='colored' autoClose={3000} />
             </div>
         </>
     )
