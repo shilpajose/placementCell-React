@@ -6,7 +6,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import { useGoogleLogin } from '@react-oauth/google';
 import axios from 'axios';
 import Button from 'react-bootstrap/Button';
-
+import { adminLoginAPI } from '../Services/AllApi';
 
 function Auth({ insideRegister }) {
   const navigate = useNavigate()
@@ -89,6 +89,32 @@ function Auth({ insideRegister }) {
   // cancel
   const handleCancel = () => {
     navigate('/')
+  }
+  const adminLogin = async (e) => {
+    e.preventDefault()
+    if (userInputs.email && userInputs.password) {
+      // api call
+      try {
+        const result = await adminLoginAPI(userInputs)
+        if (result.status == 200) {
+          sessionStorage.setItem("existingUser", JSON.stringify(result.data.existingUser.email))
+          toast.success(`welcome ${result.data.existingUser.email}`)
+          setUserInputs({ email: "", password: "" })
+          setTimeout(() => {
+            navigate('/admindashboard')
+          }, 2000)
+
+        } else {
+          toast.error(result.response.data)
+        }
+      }
+      catch (err) {
+        console.log(err);
+      }
+    }
+    else {
+      toast.warning('Please fill the form')
+    }
   }
 
 
@@ -178,9 +204,7 @@ function Auth({ insideRegister }) {
                       <div className='mt-3'>
                         <div className='d-flex justify-content-center'>
                           <button onClick={handleLogin} className='btn btn-primary mb-2 me-2'>USER LOGIN</button>
-                          <Link to={'/admindashboard'}>
-                            <button className='btn btn-primary mb-2 me-2'>ADMIN LOGIN</button>
-                          </Link>
+                          <button onClick={adminLogin} className='btn btn-primary mb-2 me-2'>ADMIN LOGIN</button>
                           <button onClick={handleCancel} className='btn btn-primary mb-2 Me-2'>CANCEL</button>
                         </div>
 

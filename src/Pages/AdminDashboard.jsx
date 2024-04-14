@@ -10,17 +10,21 @@ import { Link, useNavigate } from 'react-router-dom'
 function AdminDashboard() {
     const navigate = useNavigate()
     const logout = () => {
+        sessionStorage.removeItem('existingUser')
         navigate('/')
     }
+    const user = sessionStorage.getItem('existingUser')
     return (
         <>
             <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
                 {/* <!-- Navbar Brand--> */}
                 <Link to={'/admindashboard'} style={{ textDecoration: 'none' }}>
                     <a class="navbar-brand ps-3">Placement Cell</a>
+                </Link>
 
-                </Link>                {/* <!-- Sidebar Toggle--> */}
+                {/* <!-- Sidebar Toggle--> */}
                 <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
+                <p className='text-light ms-5'>Welcome<span className='text-warning'>{user}</span></p>
                 {/* <!-- Navbar Search--> */}
                 <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
                     <div class="input-group">
@@ -36,7 +40,7 @@ function AdminDashboard() {
                             <li><a class="dropdown-item" href="#!">Settings</a></li>
                             <li><a class="dropdown-item" href="#!">Activity Log</a></li>
                             <li><hr class="dropdown-divider" /></li>
-                            <li><a class="dropdown-item" href="#!"><button onClick={logout}>Logout</button></a></li>
+                            <li><a class="dropdown-item"><button className='btn' onClick={logout}>Logout</button></a></li>
                         </ul>
                     </li>
                 </ul>
@@ -67,10 +71,12 @@ function AdminDashboard() {
                                         Placements
                                     </a>
                                 </Link>
-                                <a class="nav-link">
-                                    <div class="sb-nav-link-icon"><i className="fas fa-sign-out-alt"></i></div>
-                                    <button onClick={logout} className='btn text-light'>LogOut</button>
-                                </a>
+                                <Link to={'/admin-jobapplications'} style={{ textDecoration: 'none' }}>
+                                    <a class="nav-link">
+                                        <div class="sb-nav-link-icon"><i className="fas fa-user-tie"></i></div>
+                                        Job Applications
+                                    </a>
+                                </Link>
                             </div>
                         </div>
                         <div class="sb-sidenav-footer">
@@ -82,7 +88,7 @@ function AdminDashboard() {
                 <div id="layoutSidenav_content">
                     <main>
                         <div class="container-fluid px-4">
-                            <h1 class="mt-4">Dashboard</h1>
+                                <h1 class="mt-4">Dashboard</h1>
                             <ol class="breadcrumb mb-4">
                                 <li class="breadcrumb-item active">Dashboard</li>
                             </ol>

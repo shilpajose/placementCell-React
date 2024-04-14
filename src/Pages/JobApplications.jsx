@@ -1,10 +1,11 @@
-import React from 'react'
+
+ import React from 'react'
 import './admindashboardscripts.js'
 import './admindashboardstyles.css'
 import './admindatatable.js'
 import { Link } from 'react-router-dom'
 
-function UsersData() {
+function  JobApplications() {
     const logout = () => {
         sessionStorage.removeItem('existingUser')
         navigate('/')
@@ -81,22 +82,22 @@ function UsersData() {
                 <div id="layoutSidenav_content">
                     <main>
                         <div class="container-fluid px-4">
-                            <h1 class="mt-4">User Management</h1>
+                            <h1 class="mt-4">Job Application Management</h1>
                             <ol class="breadcrumb mb-4">
                                 <Link to={'/admindashboard'} style={{ textDecoration: 'none' }}>
                                     <li class="breadcrumb-item"><a>Dashboard /</a></li>
                                 </Link>
-                                <li class="breadcrumb-item active">User Management</li>
+                                <li class="breadcrumb-item active">Job Application Management</li>
                             </ol>
                             <div class="card mb-4">
                                 <div class="card-body">
-                                    Managing all users data , adding,updating and deleting
+                                    Managing all Job Application data , adding,updating and deleting
                                 </div>
                             </div>
                             <div class="card mb-4">
                                 <div class="card-header">
                                     <i class="fas fa-table me-1"></i>
-                                    Users Data                            </div>
+                                    Job Application Data                            </div>
                                 <div className='container mt-5 text-center d-flex justify-content-center'>
                                     <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
                                         <div class="input-group">
@@ -256,4 +257,4 @@ function UsersData() {
     )
 }
 
-export default UsersData
+export default  JobApplications

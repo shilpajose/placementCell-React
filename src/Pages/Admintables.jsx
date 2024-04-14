@@ -12,6 +12,11 @@ function Admintables() {
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
+
+    const logout = () => {
+        sessionStorage.removeItem('existingUser')
+        navigate('/')
+    }
     return (
         <>
             <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
@@ -36,7 +41,7 @@ function Admintables() {
                             <li><a class="dropdown-item" href="#!">Settings</a></li>
                             <li><a class="dropdown-item" href="#!">Activity Log</a></li>
                             <li><hr class="dropdown-divider" /></li>
-                            <li><a class="dropdown-item" href="#!">Logout</a></li>
+                            <li><a class="dropdown-item"><button className='btn' onClick={logout}>Logout</button></a></li>
                         </ul>
                     </li>
                 </ul>
@@ -66,10 +71,12 @@ function Admintables() {
                                         Placements
                                     </a>
                                 </Link>
-                                <a class="nav-link">
-                                    <div class="sb-nav-link-icon"><i className="fas fa-sign-out-alt"></i></div>
-                                    LogOut
-                                </a>
+                                <Link to={'/admin-jobapplications'} style={{ textDecoration: 'none' }}>
+                                    <a class="nav-link">
+                                        <div class="sb-nav-link-icon"><i className="fas fa-user-tie"></i></div>
+                                        Job Applications
+                                    </a>
+                                </Link>
                             </div>
                         </div>
                         <div class="sb-sidenav-footer">

@@ -10,6 +10,7 @@ import MyReume from './Pages/MyReume'
 import AdminDashboard from './Pages/AdminDashboard'
 import Admintables from './Pages/Admintables'
 import UsersData from './Pages/UsersData'
+import JobApplications from './Pages/JobApplications'
 
 
 function App() {
@@ -28,6 +29,7 @@ function App() {
         <Route path='/admindashboard' element={<AdminDashboard/>}></Route>
         <Route path='/admin-table' element={<Admintables/>}></Route>
         <Route path='/admin-userdata' element={<UsersData/>}></Route>
+        <Route path='/admin-jobapplications' element={<JobApplications/>}></Route>
       </Routes>
     </>
   )
