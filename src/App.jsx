@@ -11,7 +11,9 @@ import AdminDashboard from './Pages/AdminDashboard'
 import Admintables from './Pages/Admintables'
 import UsersData from './Pages/UsersData'
 import JobApplications from './Pages/JobApplications'
-
+import Test from './Components/Test'
+import SingleJobView from './Pages/SingleJobView'
+import EditPlacements from './Components/EditPlacements'
 
 function App() {
 
@@ -24,12 +26,15 @@ function App() {
         <Route path='/home' element={<Homepage/>}></Route>
         <Route path='/my-interviews' element={<MyInterviews/>}></Route>
         <Route path='/all-placements' element={<Allplacements/>}></Route>
+        <Route path='/singlejobview/:id' element={<SingleJobView/>}></Route>
         <Route path='/my-profile' element={<Myprofile/>}></Route>
         <Route path='/my-resume' element={<MyReume/>}></Route>
         <Route path='/admindashboard' element={<AdminDashboard/>}></Route>
         <Route path='/admin-table' element={<Admintables/>}></Route>
         <Route path='/admin-userdata' element={<UsersData/>}></Route>
         <Route path='/admin-jobapplications' element={<JobApplications/>}></Route>
+        <Route path='/test' element={<Test/>}></Route>
+        <Route path='/edit-placements/:id' elements = {<EditPlacements/>}></Route>
       </Routes>
     </>
   )

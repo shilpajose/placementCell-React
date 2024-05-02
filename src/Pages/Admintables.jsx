@@ -2,33 +2,58 @@ import React, { useEffect } from 'react'
 import './admindashboardscripts.js'
 import './admindashboardstyles.css'
 import './admindatatable.js'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import { addPlacementsAPI, getAllPlacementsAPI } from '../Services/AllApi.js';
+import { addPlacementsAPI, deletePlacementAPI, editPlacementAPI, getAllPlacementsAPI } from '../Services/AllApi.js';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, toast } from 'react-toastify';
-import { FloatingLabel, Form } from 'react-bootstrap'
+import { FloatingLabel, Form } from 'react-bootstrap';
+import DataTable from 'react-data-table-component'
+import Badge from 'react-bootstrap/Badge';
+// import EditPlacements from '../Components/EditPlacements.jsx'
 
 function Admintables() {
 
+    const navigate = useNavigate()
+    const { id } = useParams()
     // add placement data
     const [inputs, setInputs] = useState({
-        company_name: "", company_address: "", job_position: "", date: "", venue: ""
+        company_name: "", description: "", job_position: "", date: "", venue: ""
     })
     // console.log(inputs);
 
     // state for getting all placements
     const [allPlacementData, setAllPlacementData] = useState([])
 
+    // state for edit response
+    const [editResponse, setEditResponse] = useState('')
+
     // modal form
     const [show, setShow] = useState(false);
     const handleClose = () => {
         setShow(false);
-        setInputs({ company_name: "", company_address: "", job_position: "", date: "", venue: "" })
+        setInputs({ company_name: "", description: "", job_position: "", date: "", venue: "" })
     }
     const handleShow = () => setShow(true);
+
+
+    // edit
+    const [editshow, setEditShow] = useState(false);
+    const handleeditClose = () => setEditShow(false);
+    // const handleeditShow = () => setEditShow(true);
+    const handleeditShow = (rowData) => {
+        setInputs({
+            _id: rowData._id,
+            company_name: rowData.company_name,
+            description: rowData.description,
+            job_position: rowData.job_position,
+            date: rowData.date,
+            venue: rowData.venue
+        });
+        setEditShow(true);
+    };
 
     // logout
     const logout = () => {
@@ -40,8 +65,8 @@ function Admintables() {
     const validateCompanyName = (company_name) => {
         return company_name.trim() !== ''
     }
-    const validateCompanyAddress = (company_address) => {
-        return company_address.trim() !== ''
+    const validateCompanyAddress = (description) => {
+        return description.trim() !== ''
     }
     const validateJobPosition = (job_position) => {
         return job_position.trim() !== ''
@@ -56,15 +81,15 @@ function Admintables() {
     // add placements
     const AddPlacements = async (e) => {
         e.preventDefault()
-        const { company_name, company_address, job_position, date, venue } = inputs
-        if (validateCompanyName(company_name) && validateCompanyAddress(company_address) && validateJobPosition(job_position) && validateDate(date) && validateVenue(venue)) {
+        const { company_name, description, job_position, date, venue } = inputs
+        if (validateCompanyName(company_name) && validateCompanyAddress(description) && validateJobPosition(job_position) && validateDate(date) && validateVenue(venue)) {
             try {
                 // api call
                 const result = await addPlacementsAPI(inputs)
                 console.log(result);
                 if (result.status == 200) {
                     toast.success('Placement for this company has been added')
-                    setInputs({ company_name: "", company_address: "", job_position: "", date: "", venue: "" })
+                    setInputs({ company_name: "", description: "", job_position: "", date: "", venue: "" })
                     handleClose()
                     getAllPlacements()
                 } else {
@@ -84,7 +109,7 @@ function Admintables() {
     const getAllPlacements = async () => {
         try {
             const result = await getAllPlacementsAPI()
-            console.log(result);
+            // console.log(result);
             if (result.status == 200) {
                 setAllPlacementData(result.data)
             }
@@ -97,6 +122,110 @@ function Admintables() {
     useEffect(() => {
         getAllPlacements()
     }, [])
+
+    //    data table
+    const columns = [
+        {
+            name: 'Company Name',
+            selector: row => row.company_name,
+            sortable: true,
+        },
+        {
+            name: 'Description',
+            selector: row => row.description,
+            sortable: true,
+        },
+        {
+            name: 'Job Position',
+            selector: row => row.job_position,
+            sortable: true,
+        },
+        {
+            name: 'Date',
+            selector: row => row.date,
+            sortable: true,
+        },
+        {
+            name: 'Venue',
+            selector: row => row.venue,
+            sortable: true,
+        },
+        {
+            name: 'Edit',
+            cell: (row) => (
+
+                // <Link to={`/edit-placements/${row._id}`}><i class="fas fa-warning"></i></Link>
+
+                <button className='btn text-primary' onClick={() => handleeditShow(row)}>
+                    <i className='fa-solid fa-pen text-warning'></i>
+                </button>
+            ),
+        },
+        {
+            name: 'Delete',
+            cell: (row) => <button className='btn text-danger' onClick={() => handleDelete(row._id)}><i class="fa-solid fa-trash"></i></button>,
+        },
+    ];
+    // filter
+    const [filterValue, setFilterValue] = useState('');
+    const [filteredData, setFilteredData] = useState(allPlacementData || []);
+
+    const handleFilterChange = (event) => {
+        setFilterValue(event.target.value);
+    };
+
+    useEffect(() => {
+        const newData = allPlacementData?.filter(row => {
+            return row.company_name.toLowerCase().includes(filterValue.toLowerCase());
+        }) || [];
+        setFilteredData(newData);
+    }, [filterValue, allPlacementData]);
+
+    // delete placemet
+    const handleDelete = async (id) => {
+        const result = await deletePlacementAPI(id)
+        if (result.status == 200) {
+            getAllPlacements()
+        }
+        console.log(result);
+    }
+    const editPlacement = async () => {
+        try {
+            // Destructure values from inputs state
+            const { _id, company_name, description, job_position, date, venue } = inputs;
+
+            // Check if any required fields are empty
+            if (!_id || !company_name || !description || !job_position || !date || !venue) {
+                toast.warning("Please fill all the fields");
+                return;
+            }
+
+            // Create a new FormData object and append data
+            const reqBody = new FormData();
+            reqBody.append("_id", _id);
+            reqBody.append("company_name", company_name);
+            reqBody.append("description", description);
+            reqBody.append("job_position", job_position);
+            reqBody.append("date", date);
+            reqBody.append("venue", venue);
+
+            // Make API call to update placement
+            const result = await editPlacementAPI(_id, reqBody);
+
+            // Handle API response
+            if (result.status === 200) {
+                setEditResponse(result);
+                handleeditClose();
+                getAllPlacements()
+            } else {
+                console.log(result.response);
+            }
+        } catch (err) {
+            console.log(err);
+        }
+    };
+
+
     return (
         <>
             <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
@@ -177,19 +306,21 @@ function Admintables() {
                             </ol>
                             <div class="card mb-4">
                                 <div class="card-body">
-                                    Managing all Placements data , adding,updating and deleting
+                                    Managing all Placements data 
                                 </div>
                             </div>
                             <div class="card mb-4">
                                 <div class="card-header">
                                     <i class="fas fa-table me-1"></i>
-                                    Placements Data                            </div>
-                                10 entries
+                                    Placements Data
+                                </div>
+                                <h4 className='m-2'><Badge bg="warning">{allPlacementData?.length}</Badge> Entries</h4>
                                 <div className='container mt-5 text-center d-flex justify-content-center'>
                                     <button onClick={handleShow} className='btn btn-success'>Add New <i className='fas fa-plus'></i></button>
                                     <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
                                         <div class="input-group">
-                                            <input class="form-control" type="text" placeholder="Search for..." aria-label="Search for..." aria-describedby="btnNavbarSearch" />
+                                            {/* onChange={handleFilter} */}
+                                            <input onChange={handleFilterChange} className="form-control" type="text" placeholder="Search..." aria-label="Search" aria-describedby="btnNavbarSearch" />
                                             <button class="btn btn-primary" id="btnNavbarSearch" type="button"><i class="fas fa-search"></i></button>
                                         </div>
                                     </form>
@@ -213,18 +344,30 @@ function Admintables() {
                                                     isInvalid={!validateCompanyName(inputs.company_name)}
                                                 />
                                             </FloatingLabel>
-                                            <FloatingLabel
+                                            {/* <FloatingLabel
                                                 controlId="floatingInputName"
-                                                label="Company_Address"
+                                                label="Description"
                                                 className="mb-3"
                                             >
-                                                <Form.Control value={inputs.company_address}
-                                                    onChange={e => setInputs({ ...inputs, company_address: e.target.value })}
+                                                <Form.Control value={inputs.description}
+                                                    onChange={e => setInputs({ ...inputs, description: e.target.value })}
                                                     type="text"
-                                                    placeholder="Company_Address"
-                                                    isInvalid={!validateCompanyAddress(inputs.company_address)}
+                                                    placeholder="Description"
+                                                    isInvalid={!validateCompanyAddress(inputs.description)}
+                                                />
+                                            </FloatingLabel> */}
+                                            <FloatingLabel controlId="floatingTextarea2" label="Comments" className="mb-3"
+>
+                                                <Form.Control value={inputs.description}
+                                                    onChange={e => setInputs({ ...inputs, description: e.target.value })}
+                                                    as="textarea"
+                                                    placeholder="Leave a comment here"
+                                                    style={{ height: '100px' }}
+                                                    isInvalid={!validateCompanyAddress(inputs.description)}
+
                                                 />
                                             </FloatingLabel>
+
                                             <FloatingLabel
                                                 controlId="floatingInputName"
                                                 label="Job Position"
@@ -251,20 +394,17 @@ function Admintables() {
                                             </FloatingLabel>
                                             <FloatingLabel
                                                 controlId="floatingInputName"
-                                                label="Venue"
+                                                label="Time & Venue"
                                                 className="mb-3"
                                             >
                                                 <Form.Control value={inputs.venue}
                                                     onChange={e => setInputs({ ...inputs, venue: e.target.value })}
                                                     type="Venue"
-                                                    placeholder="Date"
+                                                    placeholder="Time & Venue"
                                                     isInvalid={!validateVenue(inputs.venue)}
                                                 />
                                             </FloatingLabel>
                                         </Form>
-
-
-
                                     </Modal.Body>
                                     <Modal.Footer>
                                         <Button variant="secondary" onClick={handleClose}>
@@ -276,39 +416,95 @@ function Admintables() {
                                     </Modal.Footer>
                                 </Modal>
                                 <div class="card-body">
-                                    <table className='table table-striped'>
-                                        <thead>
-                                            <tr>
-                                                <th>Company Name</th>
-                                                <th>Company Address</th>
-                                                <th>Job Position</th>
-                                                <th>Date</th>
-                                                <th>Venue</th>
-                                                <th>Actions</th>
-                                                <th>Actions</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {
-                                                allPlacementData?.length>0 && allPlacementData?.map(placements=>(
-                                                    <tr key={placements}>
-                                                    <td>{placements.company_name}</td>
-                                                    <td>{placements.company_address}</td>
-                                                    <td>{placements.job_position}</td>
-                                                    <td>{placements.date}</td>
-                                                    <td>{placements.venue}</td>
-                                                    <td><i className='fa-solid fa-pen text-warning'></i></td>
-                                                    <td><i className='fa-solid fa-trash text-danger'></i></td>
-                                                </tr>
-                                                ))
-                                            }
-                                        </tbody>
-                                        <h5 className='text-center'>Pagination 1 2 3 4 5 6 </h5>
-                                    </table>
+
+                                    <DataTable
+                                        columns={columns}
+                                        data={filteredData}
+                                        selectableRows
+                                        fixedHeader
+                                        pagination
+                                    />
                                 </div>
                             </div>
                         </div>
                     </main>
+                    <Modal show={editshow} onHide={handleeditClose}>
+                        <Modal.Header closeButton>
+                            <Modal.Title>Edit Placement data</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                            <Form>
+                                <FloatingLabel
+                                    controlId="floatingInputName"
+                                    label="Company_name"
+                                    className="mb-3"
+                                >
+                                    <Form.Control value={inputs.company_name}
+                                        onChange={e => setInputs({ ...inputs, company_name: e.target.value })}
+                                        type="text"
+                                        placeholder="Company_name"
+                                        isInvalid={!validateCompanyName(inputs.company_name)}
+                                    />
+                                </FloatingLabel>
+                                <FloatingLabel
+                                    controlId="floatingInputName"
+                                    label="Description"
+                                    className="mb-3"
+                                >
+                                    <Form.Control value={inputs.description}
+                                        onChange={e => setInputs({ ...inputs, description: e.target.value })}
+                                        type="text"
+                                        placeholder="Description"
+                                        isInvalid={!validateCompanyAddress(inputs.description)}
+                                    />
+                                </FloatingLabel>
+                                <FloatingLabel
+                                    controlId="floatingInputName"
+                                    label="Job Position"
+                                    className="mb-3"
+                                >
+                                    <Form.Control value={inputs.job_position}
+                                        onChange={e => setInputs({ ...inputs, job_position: e.target.value })}
+                                        type="text"
+                                        placeholder="Job Position"
+                                        isInvalid={!validateJobPosition(inputs.job_position)}
+                                    />
+                                </FloatingLabel>
+                                <FloatingLabel
+                                    controlId="floatingInputName"
+                                    label="Date"
+                                    className="mb-3"
+                                >
+                                    <Form.Control value={inputs.date}
+                                        onChange={e => setInputs({ ...inputs, date: e.target.value })}
+                                        type="date"
+                                        placeholder="Date"
+                                        isInvalid={!validateDate(inputs.date)}
+                                    />
+                                </FloatingLabel>
+                                <FloatingLabel
+                                    controlId="floatingInputName"
+                                    label="Venue"
+                                    className="mb-3"
+                                >
+                                    <Form.Control value={inputs.venue}
+                                        onChange={e => setInputs({ ...inputs, venue: e.target.value })}
+                                        type="Venue"
+                                        placeholder="Date"
+                                        isInvalid={!validateVenue(inputs.venue)}
+                                    />
+                                </FloatingLabel>
+                            </Form>
+                        </Modal.Body>
+                        <Modal.Footer>
+                            <Button variant="secondary" onClick={handleeditClose}>
+                                Close
+                            </Button>
+                            <Button variant="primary" onClick={editPlacement}>
+                                Save Changes
+                            </Button>
+                        </Modal.Footer>
+                    </Modal>
                     <footer class="py-4 bg-light mt-auto">
                         <div class="container-fluid px-4">
                             <div class="d-flex align-items-center justify-content-between small">

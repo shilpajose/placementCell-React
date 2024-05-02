@@ -6,16 +6,23 @@ import { ToastContainer, toast } from 'react-toastify';
 import { useGoogleLogin } from '@react-oauth/google';
 import axios from 'axios';
 import Button from 'react-bootstrap/Button';
-import { adminLoginAPI } from '../Services/AllApi';
+import { adminLoginAPI, userLoginAPI, userRegistrationAPI } from '../Services/AllApi';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 function Auth({ insideRegister }) {
   const navigate = useNavigate()
+
+  // password eye
+  const [passwordVisible, setPasswordVisible] = useState(false);
+  const togglePasswordVisibility = () => {
+    setPasswordVisible(!passwordVisible);
+  };
 
   const [userName, setUserName] = useState('');
 
   //state to store user creating datas
   const [userInputs, setUserInputs] = useState({
-    username: "", email: "", password: "", photo: ''
+    username: "", email: "", password: ""
   })
   // console.log(userInputs);
 
@@ -31,9 +38,7 @@ function Auth({ insideRegister }) {
   const validateUsername = (username) => {
     return username.trim() !== ''
   }
-  const validatePhoto = (photo) => {
-    return photo.trim() !== ''
-  }
+
 
   //   google auth
   const login = useGoogleLogin({
@@ -48,7 +53,9 @@ function Auth({ insideRegister }) {
         const { name } = res.data;
         setUserName(name);
         sessionStorage.setItem('name', JSON.stringify(res.data.name))
-
+        sessionStorage.setItem('email', JSON.stringify(res.data.email))
+        sessionStorage.setItem('Id', JSON.stringify(res.data._id))
+        // sessionStorage.setItem("existingUser", JSON.stringify(result.data.existingUser))
 
         console.log("Hello", res);
         navigate('/home')
@@ -63,34 +70,65 @@ function Auth({ insideRegister }) {
     login(); // Trigger Google Sign-In
   };
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault()
     const { email, password } = userInputs
     if (validateEmail(email) && validatePassword(password)) {
-      // toast.success('Login success')
-      navigate('/home')
+      try {
+        const result = await userLoginAPI(userInputs)
+        if (result.status == 200) {
+          toast.success('Login success')
+          sessionStorage.setItem('name', JSON.stringify(result.data.existingUser.username))
+          sessionStorage.setItem('email', JSON.stringify(result.data.existingUser.email))
+          sessionStorage.setItem("uid", JSON.stringify(result.data.existingUser._id))
+          sessionStorage.setItem("token", result.data.token)
+
+          setUserInputs({ email: "", password: "" })
+          setTimeout(() => {
+            navigate('/home')
+          }, 4000)
+        } else {
+          toast.error(result.response.data)
+        }
+      }
+      catch (err) {
+        console.log(err);
+      }
     } else {
-      // toast.error('Please fill the form')
-      navigate('/home')
+      toast.error('Please fill the form')
+      // navigate('/home')
     }
   }
 
   // register
-  const handleRegister = (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault()
-    const { email, password, username, photo } = userInputs
-    if (validateEmail(email) && validatePassword(password) && validateUsername(username) && validatePhoto(photo)) {
-      // toast.success('reg success')
-      navigate('/home')
+    const { email, password, username } = userInputs
+    if (validateEmail(email) && validatePassword(password) && validateUsername(username)) {
+      try {
+        const result = await userRegistrationAPI(userInputs)
+        if (result.status == 200) {
+          toast.success('reg success')
+          setUserInputs({ username: "", email: "", password: "" })
+          setTimeout(() => {
+            navigate('/login')
+          }, 3000)
+        } else {
+          toast.error(result.response.data)
+        }
+      } catch (err) {
+        console.log(err);
+      }
     } else {
-      // toast.error('Please fill the form')
-      navigate('/home')
+      toast.error('Please fill the form')
     }
   }
+  console.log(userInputs);
   // cancel
   const handleCancel = () => {
     navigate('/')
   }
+
   const adminLogin = async (e) => {
     e.preventDefault()
     if (userInputs.email && userInputs.password) {
@@ -150,20 +188,6 @@ function Auth({ insideRegister }) {
                         />
                       </FloatingLabel>
 
-                      <FloatingLabel
-                        controlId="floatingInputName"
-                        label="Photo"
-                        className="mb-3"
-                      >
-                        <Form.Control value={userInputs.photo}
-                          onChange={e => setUserInputs({ ...userInputs, photo: e.target.value })}
-                          type="text"
-                          placeholder="Photo"
-                          isInvalid={!validatePhoto(userInputs.photo)}
-                        />
-                        <Form.Control.Feedback type="invalid">Please add photos.</Form.Control.Feedback>
-
-                      </FloatingLabel>
                     </>
 
                   }
@@ -180,15 +204,20 @@ function Auth({ insideRegister }) {
                     />
                     <Form.Control.Feedback type="invalid">Please enter a valid email address.</Form.Control.Feedback>
                   </FloatingLabel>
-                  <FloatingLabel controlId="floatingPassword" label="Password">
-                    <Form.Control value={userInputs.password}
-                      onChange={e => setUserInputs({ ...userInputs, password: e.target.value })}
-                      type="password"
-                      placeholder="Password"
-                      isInvalid={!validatePassword(userInputs.password)}
-                    />
-                    <Form.Control.Feedback type="invalid">Password must be 6 characters.</Form.Control.Feedback>
-                  </FloatingLabel>
+                 <div className='password-container'>
+                 <FloatingLabel controlId="floatingPassword" label="Password">
+                      <Form.Control value={userInputs.password}
+                        onChange={e => setUserInputs({ ...userInputs, password: e.target.value })}
+                        type={passwordVisible ? 'text' : 'password'} placeholder="Password"
+                        isInvalid={!validatePassword(userInputs.password)}
+                      />
+                      <span onClick={togglePasswordVisibility}>
+                        {passwordVisible ? <FaEye /> : <FaEyeSlash />}
+                      </span>
+                      <Form.Control.Feedback type="invalid">Password must be 6 characters.</Form.Control.Feedback>
+                    </FloatingLabel>
+                 </div>
+                    
 
                   {
                     insideRegister ?
@@ -214,7 +243,7 @@ function Auth({ insideRegister }) {
                         <p>New User? Click here to <Link to={'/register'}>Register</Link></p>
                         <div className='d-flex m-3 p-3'>
                           <input type="checkbox" style={{ marginRight: '5px' }} /><label style={{ marginRight: '95px' }}>Remember me</label>
-                          <Link to="/forgot-password">Forgot password?</Link>
+                          {/* <Link to="/forgot-password">Forgot password?</Link> */}
                         </div>
                         <Button variant="primary" onClick={handleGoogleSignIn}>Sign in with Google
                           <img src="https://i.postimg.cc/7hTSYK3b/g-removebg-preview.png" alt="" style={{ width: '30px', height: '30px' }} className='ms-3' /></Button>

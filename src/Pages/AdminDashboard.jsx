@@ -1,19 +1,45 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import './admindashboardscripts.js'
 import './admindashboardstyles.css'
 import './admindatatable.js'
-// import './chart-area-demo.js'
-// import './chart-bar-demo.js'
 import './datatables-demo.js'
 import { Link, useNavigate } from 'react-router-dom'
+import { getAllPlacementsAPI } from '../Services/AllApi.js'
+import { Table } from 'react-bootstrap'
 
 function AdminDashboard() {
+    const [allPlacementData, setAllPlacementData] = useState([])
+
+    const getAllData = async () => {
+        try {
+            const result = await getAllPlacementsAPI()
+            if (result.status == 200) {
+                setAllPlacementData(result.data)
+            }
+
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    useEffect(() => {
+        getAllData()
+    }, [])
+
     const navigate = useNavigate()
     const logout = () => {
         sessionStorage.removeItem('existingUser')
         navigate('/')
     }
     const user = sessionStorage.getItem('existingUser')
+
+
+    console.log(allPlacementData);
+
+    const placement = () => {
+        navigate('/admin-table')
+    }
+
     return (
         <>
             <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
@@ -26,6 +52,11 @@ function AdminDashboard() {
                 <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
                 <p className='text-light ms-5'>Welcome<span className='text-warning'>{user}</span></p>
                 {/* <!-- Navbar Search--> */}
+                <div className='ms-5 d-flex' style={{position:'absolute',right:'450px'}}>
+                    <i className="fa-solid fa-users text-warning ms-5"></i><sup className='text-light'>10</sup>
+                    <i class="fa-regular fa-address-card text-warning ms-1"></i><sup className='text-light'>15</sup>
+                    <i class="fa-solid fa-laptop text-warning ms-1"></i><sup className='text-light'>20 </sup>
+                </div>
                 <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
                     <div class="input-group">
                         <input class="form-control" type="text" placeholder="Search for..." aria-label="Search for..." aria-describedby="btnNavbarSearch" />
@@ -88,14 +119,14 @@ function AdminDashboard() {
                 <div id="layoutSidenav_content">
                     <main>
                         <div class="container-fluid px-4">
-                                <h1 class="mt-4">Dashboard</h1>
+                            <h1 class="mt-4">Dashboard</h1>
                             <ol class="breadcrumb mb-4">
                                 <li class="breadcrumb-item active">Dashboard</li>
                             </ol>
                             <div class="row">
                                 <div class="col-xl-3 col-md-6">
                                     <div class="card bg-primary text-white mb-4">
-                                        <div class="card-body">Primary Card</div>
+                                        <div class="card-body">Placements Data</div>
                                         <div class="card-footer d-flex align-items-center justify-content-between">
                                             <a class="small text-white stretched-link" href="#">View Details</a>
                                             <div class="small text-white"><i class="fas fa-angle-right"></i></div>
@@ -104,7 +135,7 @@ function AdminDashboard() {
                                 </div>
                                 <div class="col-xl-3 col-md-6">
                                     <div class="card bg-warning text-white mb-4">
-                                        <div class="card-body">Warning Card</div>
+                                        <div class="card-body">Users Data</div>
                                         <div class="card-footer d-flex align-items-center justify-content-between">
                                             <a class="small text-white stretched-link" href="#">View Details</a>
                                             <div class="small text-white"><i class="fas fa-angle-right"></i></div>
@@ -113,7 +144,7 @@ function AdminDashboard() {
                                 </div>
                                 <div class="col-xl-3 col-md-6">
                                     <div class="card bg-success text-white mb-4">
-                                        <div class="card-body">Success Card</div>
+                                        <div class="card-body">Job Applications</div>
                                         <div class="card-footer d-flex align-items-center justify-content-between">
                                             <a class="small text-white stretched-link" href="#">View Details</a>
                                             <div class="small text-white"><i class="fas fa-angle-right"></i></div>
@@ -122,7 +153,7 @@ function AdminDashboard() {
                                 </div>
                                 <div class="col-xl-3 col-md-6">
                                     <div class="card bg-danger text-white mb-4">
-                                        <div class="card-body">Danger Card</div>
+                                        <div class="card-body">All Data</div>
                                         <div class="card-footer d-flex align-items-center justify-content-between">
                                             <a class="small text-white stretched-link" href="#">View Details</a>
                                             <div class="small text-white"><i class="fas fa-angle-right"></i></div>
@@ -158,101 +189,35 @@ function AdminDashboard() {
                                     <i class="fas fa-table me-1"></i>
                                     All Placements
                                 </div>
+                                <p>{allPlacementData?.length}</p>
                                 <div class="card-body">
-                                    <table className='table table-striped'>
+                                    <Table striped bordered hover>
                                         <thead>
                                             <tr>
-                                                <th>Name</th>
-                                                <th>Position</th>
-                                                <th>Office</th>
-                                                <th>Age</th>
-                                                <th>Start date</th>
-                                                <th>Salary</th>
+                                                <th>#</th>
+                                                <th>Job Name</th>
+                                                <th>Company Name</th>
+                                                <th>Interview Date</th>
+                                                <th>Interview Venue</th>
                                                 <th>Actions</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr>
-                                                <td>Tiger Nixon</td>
-                                                <td>System Architect</td>
-                                                <td>Edinburgh</td>
-                                                <td>61</td>
-                                                <td>2011/04/25</td>
-                                                <td>$320,800</td>
-                                                <Link to={'/admin-table'}><td><i className='fas fa-eye text-success'></i></td></Link>
-                                            </tr>
-                                            <tr>
-                                                <td>Garrett Winters</td>
-                                                <td>Accountant</td>
-                                                <td>Tokyo</td>
-                                                <td>63</td>
-                                                <td>2011/07/25</td>
-                                                <td>$170,750</td>
-                                                <Link to={'/admin-table'}><td><i className='fas fa-eye text-success'></i></td></Link>
+                                            {
+                                                allPlacementData?.length > 0 && allPlacementData?.map((data, index) => (
+                                                    <tr key={data}>
+                                                        <td>{index + 1}</td>
+                                                        <td>{data.job_position}</td>
+                                                        <td>{data.company_name}</td>
+                                                        <td>{data.date}</td>
+                                                        <td>{data.venue}</td>
+                                                        <td onClick={placement}><i className='fas fa-eye text-success'></i></td>
+                                                    </tr>
 
-                                            </tr>
-                                            <tr>
-                                                <td>Ashton Cox</td>
-                                                <td>Junior Technical Author</td>
-                                                <td>San Francisco</td>
-                                                <td>66</td>
-                                                <td>2009/01/12</td>
-                                                <td>$86,000</td>
-                                                <Link to={'/admin-table'}><td><i className='fas fa-eye text-success'></i></td></Link>
-
-                                            </tr>
-                                            <tr>
-                                                <td>Cedric Kelly</td>
-                                                <td>Senior Javascript Developer</td>
-                                                <td>Edinburgh</td>
-                                                <td>22</td>
-                                                <td>2012/03/29</td>
-                                                <td>$433,060</td>
-                                                <Link to={'/admin-table'}><td><i className='fas fa-eye text-success'></i></td></Link>
-
-                                            </tr>
-                                            <tr>
-                                                <td>Airi Satou</td>
-                                                <td>Accountant</td>
-                                                <td>Tokyo</td>
-                                                <td>33</td>
-                                                <td>2008/11/28</td>
-                                                <td>$162,700</td>
-                                                <Link to={'/admin-table'}><td><i className='fas fa-eye text-success'></i></td></Link>
-
-                                            </tr>
-                                            <tr>
-                                                <td>Brielle Williamson</td>
-                                                <td>Integration Specialist</td>
-                                                <td>New York</td>
-                                                <td>61</td>
-                                                <td>2012/12/02</td>
-                                                <td>$372,000</td>
-                                                <Link to={'/admin-table'}><td><i className='fas fa-eye text-success'></i></td></Link>
-
-                                            </tr>
-                                            <tr>
-                                                <td>Herrod Chandler</td>
-                                                <td>Sales Assistant</td>
-                                                <td>San Francisco</td>
-                                                <td>59</td>
-                                                <td>2012/08/06</td>
-                                                <td>$137,500</td>
-                                                <Link to={'/admin-table'}><td><i className='fas fa-eye text-success'></i></td></Link>
-
-                                            </tr>
-                                            <tr>
-                                                <td>Rhona Davidson</td>
-                                                <td>Integration Specialist</td>
-                                                <td>Tokyo</td>
-                                                <td>55</td>
-                                                <td>2010/10/14</td>
-                                                <td>$327,900</td>
-                                                <Link to={'/admin-table'}><td><i className='fas fa-eye text-success'></i></td></Link>
-                                            </tr>
-
+                                                ))
+                                            }
                                         </tbody>
-                                    </table>
+                                    </Table>
                                 </div>
                             </div>
                         </div>

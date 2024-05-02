@@ -17,3 +17,18 @@
     background-size: cover;
     background-repeat: no-repeat;
 }
+.password-container {
+    position: relative;
+  }
+  
+  .password-container input {
+    padding-right: 30px; /* Ensure space for the eye icon */
+  }
+  
+  .password-container span {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+  }

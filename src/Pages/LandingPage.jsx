@@ -51,7 +51,7 @@ function LandingPage() {
                             <i class="fas fa-circle fa-stack-2x text-primary"></i>
                             <i class="fas fa-shopping-cart fa-stack-1x fa-inverse"></i>
                         </span>
-                        <h4 class="my-3">E-Commerce</h4>
+                        <h4 class="my-3">All Placements</h4>
                         <p class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minima maxime quam architecto quo inventore harum ex magni, dicta impedit.</p>
                     </div>
                     <div class="col-md-4">
@@ -59,7 +59,7 @@ function LandingPage() {
                             <i class="fas fa-circle fa-stack-2x text-primary"></i>
                             <i class="fas fa-laptop fa-stack-1x fa-inverse"></i>
                         </span>
-                        <h4 class="my-3">Responsive Design</h4>
+                        <h4 class="my-3">Email Send</h4>
                         <p class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minima maxime quam architecto quo inventore harum ex magni, dicta impedit.</p>
                     </div>
                     <div class="col-md-4">
@@ -67,7 +67,7 @@ function LandingPage() {
                             <i class="fas fa-circle fa-stack-2x text-primary"></i>
                             <i class="fas fa-lock fa-stack-1x fa-inverse"></i>
                         </span>
-                        <h4 class="my-3">Web Security</h4>
+                        <h4 class="my-3">User Profile</h4>
                         <p class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minima maxime quam architecto quo inventore harum ex magni, dicta impedit.</p>
                     </div>
                 </div>
@@ -88,7 +88,7 @@ function LandingPage() {
                                 <div class="portfolio-hover">
                                     <div class="portfolio-hover-content"><i class="fas fa-plus fa-3x"></i></div>
                                 </div>
-                                <img class="img-fluid" src="https://www.deskera.com/blog/content/images/2021/08/pexels-tranmautritam-69432.jpg" alt="..." />
+                                <img class="img-fluid" style={{height:'250px',width:'100%'}} src="https://www.deskera.com/blog/content/images/2021/08/pexels-tranmautritam-69432.jpg" alt="..." />
                             </a>
                             <div class="portfolio-caption">
                                 <div class="portfolio-caption-heading">Threads</div>
@@ -103,7 +103,7 @@ function LandingPage() {
                                 <div class="portfolio-hover">
                                     <div class="portfolio-hover-content"><i class="fas fa-plus fa-3x"></i></div>
                                 </div>
-                                <img class="img-fluid" src="https://www.deskera.com/blog/content/images/2021/08/pexels-tranmautritam-69432.jpg" alt="..." />
+                                <img class="img-fluid" style={{height:'250px',width:'100%'}} src="https://www.shutterstock.com/image-photo/high-school-student-college-260nw-270002372.jpg" alt="..." />
                             </a>
                             <div class="portfolio-caption">
                                 <div class="portfolio-caption-heading">Explore</div>
@@ -118,7 +118,7 @@ function LandingPage() {
                                 <div class="portfolio-hover">
                                     <div class="portfolio-hover-content"><i class="fas fa-plus fa-3x"></i></div>
                                 </div>
-                                <img class="img-fluid" src="https://www.deskera.com/blog/content/images/2021/08/pexels-tranmautritam-69432.jpg" alt="..." />
+                                <img class="img-fluid" style={{height:'250px',width:'100%'}} src="https://www.envisionlearning.ca/wp-content/uploads/2022/11/Top-IT-jobs-for-freshers-in-India.jpg" alt="..." />
                             </a>
                             <div class="portfolio-caption">
                                 <div class="portfolio-caption-heading">Finish</div>
@@ -133,7 +133,7 @@ function LandingPage() {
                                 <div class="portfolio-hover">
                                     <div class="portfolio-hover-content"><i class="fas fa-plus fa-3x"></i></div>
                                 </div>
-                                <img class="img-fluid" src="https://www.deskera.com/blog/content/images/2021/08/pexels-tranmautritam-69432.jpg" alt="..." />
+                                <img class="img-fluid" style={{height:'250px',width:'100%'}} src="https://akm-img-a-in.tosshub.com/indiatoday/images/story/202303/untitled_design_1_1-sixteen_nine.jpg?VersionId=dbHz1dZdx7yNJMGFAxmRuT_qmS3RYktF&size=690:388" alt="..." />
                             </a>
                             <div class="portfolio-caption">
                                 <div class="portfolio-caption-heading">Lines</div>
@@ -148,7 +148,7 @@ function LandingPage() {
                                 <div class="portfolio-hover">
                                     <div class="portfolio-hover-content"><i class="fas fa-plus fa-3x"></i></div>
                                 </div>
-                                <img class="img-fluid" src="https://www.deskera.com/blog/content/images/2021/08/pexels-tranmautritam-69432.jpg" alt="..." />
+                                <img class="img-fluid" style={{height:'250px',width:'100%'}} src="https://contentstatic.techgig.com/photo/74171399.cms" alt="..." />
                             </a>
                             <div class="portfolio-caption">
                                 <div class="portfolio-caption-heading">Southwest</div>
@@ -163,7 +163,7 @@ function LandingPage() {
                                 <div class="portfolio-hover">
                                     <div class="portfolio-hover-content"><i class="fas fa-plus fa-3x"></i></div>
                                 </div>
-                                <img class="img-fluid" src="https://www.deskera.com/blog/content/images/2021/08/pexels-tranmautritam-69432.jpg" alt="..." />
+                                <img class="img-fluid" style={{height:'250px',width:'100%'}} src="https://www.fb101.com/wp-content/uploads/2022/08/fabian-irsara-67l-QujB14w-unsplash.jpg" alt="..." />
                             </a>
                             <div class="portfolio-caption">
                                 <div class="portfolio-caption-heading">Window</div>
@@ -283,6 +283,7 @@ function LandingPage() {
         {/* <!-- Clients--> */}
         <div class="py-5">
             <div class="container">
+                <h1 className='text-center'>Our Clients</h1>
                 <div class="row align-items-center">
                     <div class="col-md-3 col-sm-6 my-3">
                         <a href="#!"><img class="img-fluid img-brand d-block mx-auto" src="https://startbootstrap.github.io/startbootstrap-agency/assets/img/logos/microsoft.svg" alt="..." aria-label="Microsoft Logo" /></a>
@@ -300,6 +301,7 @@ function LandingPage() {
             </div>
         </div>
         {/* <!-- Contact--> */}
+        {/*  */}
         <section class="page-section" id="contact">
             <div class="container">
                 <div class="text-center">

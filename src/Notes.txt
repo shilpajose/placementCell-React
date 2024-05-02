@@ -1,0 +1,32 @@
+user
+----
+1.users register = done
+2. user login = done
+3. job apply ,job apply form upload resume 
+4. my job applications
+
+admin
+-----
+admin vere table venam all users same table padilla or admin=admin@gmail nu akkanam  = done but error
+1.user data  = download resume / pdf
+2.edit user
+3.delete user
+4.filter user = done
+5.placement edit
+6.plcement delete
+7.nav bar counts
+8.dashboard design - all placements
+9. all job applications. 
+
+front end
+---------
+mail send
+page content edit
+
+-------------------------------------------------
+1  user resume upload
+2. user interview listing
+
+
+
+
