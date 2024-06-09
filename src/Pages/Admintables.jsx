@@ -268,24 +268,14 @@ function Admintables() {
                                     </a>
                                 </Link>
                                 <div class="sb-sidenav-menu-heading">Addons</div>
-                                <Link to={'/admin-userdata'} style={{ textDecoration: 'none' }}>
-                                    <a class="nav-link">
-                                        <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
-                                        User Management
-                                    </a>
-                                </Link>
+                                
                                 <Link to={'/admin-table'} style={{ textDecoration: 'none' }}>
                                     <a class="nav-link">
                                         <div class="sb-nav-link-icon"><i className="fas fa-user-tie"></i></div>
                                         Placements
                                     </a>
                                 </Link>
-                                <Link to={'/admin-jobapplications'} style={{ textDecoration: 'none' }}>
-                                    <a class="nav-link">
-                                        <div class="sb-nav-link-icon"><i className="fas fa-user-tie"></i></div>
-                                        Job Applications
-                                    </a>
-                                </Link>
+                                
                             </div>
                         </div>
                         <div class="sb-sidenav-footer">
@@ -356,7 +346,7 @@ function Admintables() {
                                                     isInvalid={!validateCompanyAddress(inputs.description)}
                                                 />
                                             </FloatingLabel> */}
-                                            <FloatingLabel controlId="floatingTextarea2" label="Comments" className="mb-3"
+                                            <FloatingLabel controlId="floatingTextarea2" label="Description" className="mb-3"
 >
                                                 <Form.Control value={inputs.description}
                                                     onChange={e => setInputs({ ...inputs, description: e.target.value })}
